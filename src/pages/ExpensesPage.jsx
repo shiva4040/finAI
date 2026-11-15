@@ -4,14 +4,17 @@ import { useToast } from '../context/ToastContext';
 import { GlassCard } from '../components/common/GlassCard';
 import { StatCard } from '../components/common/StatCard';
 import { Button } from '../components/common/Button';
+import { Input } from '../components/common/Input';
 import { EmptyState } from '../components/common/EmptyState';
 import { ConfirmModal } from '../components/common/ConfirmModal';
-import { AddTransactionModal } from '../components/modals/AddTransactionModal';
+import { AddExpenseModal } from '../components/modals/AddExpenseModal';
+import { ImportCSVModal } from '../components/modals/ImportCSVModal';
 import { AIInsightCard } from '../components/common/AIInsightCard';
 import { formatCurrency, formatDate } from '../utils/formatters';
 import {
   TrendingDown,
   Plus,
+  Upload,
   Edit2,
   Trash2,
   Calendar,
@@ -44,6 +47,7 @@ export const ExpensesPage = () => {
   const { showToast } = useToast();
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -90,14 +94,24 @@ export const ExpensesPage = () => {
           </p>
         </div>
 
-        <Button
-          variant="danger"
-          size="md"
-          icon={Plus}
-          onClick={() => setIsAddModalOpen(true)}
-        >
-          Add Expense
-        </Button>
+        <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap">
+          <Button
+            variant="outline"
+            size="md"
+            icon={Upload}
+            onClick={() => setIsImportModalOpen(true)}
+          >
+            Import CSV
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            icon={Plus}
+            onClick={() => setIsAddModalOpen(true)}
+          >
+            Add Expense
+          </Button>
+        </div>
       </div>
 
       {/* AI Insight */}
@@ -275,12 +289,11 @@ export const ExpensesPage = () => {
             <p className="text-xs text-slate-400 mt-0.5">Itemized debit transactions</p>
           </div>
           <div className="w-full sm:w-64">
-            <input
-              type="text"
+            <Input
+              icon={Search}
               placeholder="Search expenses, vendors..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full glass-input rounded-xl px-3 py-1.5 text-xs placeholder:text-slate-500"
             />
           </div>
         </div>
@@ -312,12 +325,12 @@ export const ExpensesPage = () => {
                     <td className="py-3 px-4 text-slate-400 font-mono whitespace-nowrap">
                       {formatDate(item.date)}
                     </td>
-                    <td className="py-3 px-4">
-                      <p className="font-semibold text-slate-200 group-hover:text-white truncate max-w-sm">
+                    <td className="py-3 px-4 max-w-xs min-w-0">
+                      <p className="font-semibold text-slate-200 group-hover:text-white truncate">
                         {item.description}
                       </p>
                       {item.entityName && (
-                        <span className="text-[10px] text-slate-500">Payee: {item.entityName}</span>
+                        <span className="text-[10px] text-slate-500 block truncate">Payee: {item.entityName}</span>
                       )}
                     </td>
                     <td className="py-3 px-4 text-slate-300">
@@ -355,21 +368,25 @@ export const ExpensesPage = () => {
         )}
       </GlassCard>
 
-      {/* Add / Edit Modal */}
-      <AddTransactionModal
+      {/* Add / Edit Expense Modal */}
+      <AddExpenseModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        initialType="Expense"
       />
 
       {editingItem && (
-        <AddTransactionModal
+        <AddExpenseModal
           isOpen={!!editingItem}
           onClose={() => setEditingItem(null)}
-          initialType="Expense"
           editItem={editingItem}
         />
       )}
+
+      {/* Import CSV Modal */}
+      <ImportCSVModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
+      />
 
       {/* Delete Confirmation */}
       <ConfirmModal

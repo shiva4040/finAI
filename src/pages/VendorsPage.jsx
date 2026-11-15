@@ -158,28 +158,28 @@ export const VendorsPage = () => {
                     onClick={() => navigate(`/vendors/${vend.id}`)}
                   >
                     <td className="py-3.5 px-4">
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-3 min-w-0 max-w-xs">
                         <div className="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-xs uppercase shrink-0">
                           {vend.name.slice(0, 2)}
                         </div>
-                        <div>
-                          <p className="font-semibold text-slate-200 group-hover:text-amber-400 transition-colors">
+                        <div className="min-w-0 flex-1">
+                          <p className="font-semibold text-slate-200 group-hover:text-amber-400 transition-colors truncate">
                             {vend.name}
                           </p>
-                          <span className="text-[10px] text-slate-400">{vend.company}</span>
+                          <span className="text-[10px] text-slate-400 truncate block">{vend.company}</span>
                         </div>
                       </div>
                     </td>
 
-                    <td className="py-3.5 px-4 text-slate-300">
+                    <td className="py-3.5 px-4 text-slate-300 whitespace-nowrap">
                       <span className="px-2 py-0.5 rounded-md glass-subtle text-[11px]">
                         {vend.category}
                       </span>
                     </td>
 
                     <td className="py-3.5 px-4">
-                      <p className="text-slate-300 font-medium">{vend.contactPerson}</p>
-                      <p className="text-[10px] text-slate-400">{vend.email}</p>
+                      <p className="text-slate-300 font-medium truncate">{vend.contactPerson}</p>
+                      <p className="text-[10px] text-slate-400 truncate">{vend.email}</p>
                     </td>
 
                     <td className="py-3.5 px-4 text-right font-mono font-bold text-slate-100 whitespace-nowrap">

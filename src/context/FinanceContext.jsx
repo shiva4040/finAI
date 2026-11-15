@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
+import { notificationsApi } from '../api/notifications';
+import { financeApi } from '../api/finance';
 import {
   initialTransactions,
   initialInvoices,
@@ -350,14 +352,67 @@ export const FinanceProvider = ({ children }) => {
   };
 
   // Notifications Actions
-  const markNotificationRead = (id) => {
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  const fetchNotifications = useCallback(async () => {
+    if (!localStorage.getItem('finai_token')) {
+      return;
+    }
+    try {
+      const res = await notificationsApi.getNotifications(1, 50);
+      if (res && res.items) {
+        setNotifications(res.items);
+        setUnreadCount(res.unread_count || 0);
+      }
+    } catch (e) {
+      console.warn('Backend notifications unavailable, retaining local state', e);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchNotifications();
+  }, [fetchNotifications]);
+
+  const markNotificationRead = async (id) => {
     setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, read: true } : n))
+      prev.map((n) => (n.id === id ? { ...n, is_read: true, read: true } : n))
     );
+    setUnreadCount((prev) => Math.max(0, prev - 1));
+    try {
+      await notificationsApi.markRead(id);
+    } catch (e) {
+      console.error('Failed to mark notification read on backend', e);
+    }
   };
 
-  const markAllNotificationsRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+  const markAllNotificationsRead = async () => {
+    setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true, read: true })));
+    setUnreadCount(0);
+    try {
+      await notificationsApi.markAllRead();
+    } catch (e) {
+      console.error('Failed to mark all notifications read on backend', e);
+    }
+  };
+
+  const deleteNotification = async (id) => {
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
+    try {
+      await notificationsApi.deleteNotification(id);
+      fetchNotifications();
+    } catch (e) {
+      console.error('Failed to delete notification on backend', e);
+    }
+  };
+
+  const clearAllNotifications = async () => {
+    setNotifications([]);
+    setUnreadCount(0);
+    try {
+      await notificationsApi.clearAll();
+    } catch (e) {
+      console.error('Failed to clear all notifications on backend', e);
+    }
   };
 
   return (
@@ -368,6 +423,7 @@ export const FinanceProvider = ({ children }) => {
         customers,
         vendors,
         notifications,
+        unreadCount,
         currency,
         setCurrency,
         financialSummary,
@@ -389,8 +445,11 @@ export const FinanceProvider = ({ children }) => {
         deleteInvoice,
         recordPayment,
         markInvoiceStatus,
+        fetchNotifications,
         markNotificationRead,
         markAllNotificationsRead,
+        deleteNotification,
+        clearAllNotifications,
       }}
     >
       {children}

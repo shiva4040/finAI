@@ -99,8 +99,23 @@ export const AddCustomerModal = ({ isOpen, onClose, editCustomer = null }) => {
       title={editCustomer ? 'Edit Customer' : 'Add New Customer'}
       subtitle="Register client accounts for automated billing and revenue tracking"
       maxWidth="max-w-lg"
+      footer={
+        <>
+          <Button variant="ghost" onClick={onClose} disabled={isSubmitting}>
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            form="add-customer-form"
+            variant="primary"
+            isLoading={isSubmitting}
+          >
+            {editCustomer ? 'Update Customer' : 'Save Customer'}
+          </Button>
+        </>
+      }
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form id="add-customer-form" onSubmit={handleSubmit} className="space-y-4">
         <Input
           label="Account / Brand Name"
           placeholder="e.g. Acme Technologies"
@@ -157,15 +172,6 @@ export const AddCustomerModal = ({ isOpen, onClose, editCustomer = null }) => {
           value={formData.tags}
           onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
         />
-
-        <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
-          <Button variant="ghost" onClick={onClose} disabled={isSubmitting}>
-            Cancel
-          </Button>
-          <Button type="submit" variant="primary" isLoading={isSubmitting}>
-            {editCustomer ? 'Update Customer' : 'Save Customer'}
-          </Button>
-        </div>
       </form>
     </Modal>
   );

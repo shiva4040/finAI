@@ -11,8 +11,27 @@
     border-color: rgba(15, 23, 42, 0.08);
   }
 
-  body {
+  html,
+  body,
+  #root {
     overflow-x: hidden;
+    min-height: 100%;
+  }
+
+  /* Date picker icon inversion in dark mode */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.8);
+    cursor: pointer;
+  }
+
+  html.light input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: none;
+  }
+
+  /* Dark mode select options */
+  select option {
+    background-color: #0f172a;
+    color: #f1f5f9;
   }
 }
 
@@ -313,4 +332,13 @@ html.light ::-webkit-scrollbar-thumb:hover {
 
 .animate-pulse-subtle {
   animation: pulseSubtle 3s ease-in-out infinite;
+}
+
+/* Hide scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

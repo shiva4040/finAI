@@ -4,6 +4,7 @@ import { useToast } from '../context/ToastContext';
 import { GlassCard } from '../components/common/GlassCard';
 import { StatCard } from '../components/common/StatCard';
 import { Button } from '../components/common/Button';
+import { Select } from '../components/common/Input';
 import { AIInsightCard } from '../components/common/AIInsightCard';
 import { formatCurrency } from '../utils/formatters';
 import {
@@ -117,50 +118,44 @@ export const ReportsPage = () => {
       <GlassCard className="p-4 sm:p-5">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
           <div>
-            <label className="block text-[10px] uppercase font-bold text-slate-400 mb-1">
-              Reporting Timeframe
-            </label>
-            <select
+            <Select
+              label="Reporting Timeframe"
               value={dateRange}
               onChange={(e) => setDateRange(e.target.value)}
-              className="w-full glass-input rounded-xl px-3 py-2 text-xs"
-            >
-              <option value="q3-2026" className="bg-slate-900">Q3 2026 (Jul - Sep)</option>
-              <option value="q2-2026" className="bg-slate-900">Q2 2026 (Apr - Jun)</option>
-              <option value="h1-2026" className="bg-slate-900">H1 2026 (Jan - Jun)</option>
-              <option value="trailing-12" className="bg-slate-900">Trailing 12 Months</option>
-              <option value="all-time" className="bg-slate-900">All Time Fiscal Year</option>
-            </select>
+              options={[
+                { value: 'q3-2026', label: 'Q3 2026 (Jul - Sep)' },
+                { value: 'q2-2026', label: 'Q2 2026 (Apr - Jun)' },
+                { value: 'h1-2026', label: 'H1 2026 (Jan - Jun)' },
+                { value: 'trailing-12', label: 'Trailing 12 Months' },
+                { value: 'all-time', label: 'All Time Fiscal Year' },
+              ]}
+            />
           </div>
 
           <div>
-            <label className="block text-[10px] uppercase font-bold text-slate-400 mb-1">
-              Fiscal Year
-            </label>
-            <select
+            <Select
+              label="Fiscal Year"
               value={selectedYear}
               onChange={(e) => setSelectedYear(e.target.value)}
-              className="w-full glass-input rounded-xl px-3 py-2 text-xs"
-            >
-              <option value="2026" className="bg-slate-900">FY 2026 - 2027</option>
-              <option value="2025" className="bg-slate-900">FY 2025 - 2026</option>
-            </select>
+              options={[
+                { value: '2026', label: 'FY 2026 - 2027' },
+                { value: '2025', label: 'FY 2025 - 2026' },
+              ]}
+            />
           </div>
 
           <div>
-            <label className="block text-[10px] uppercase font-bold text-slate-400 mb-1">
-              Department Scope
-            </label>
-            <select
+            <Select
+              label="Department Scope"
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full glass-input rounded-xl px-3 py-2 text-xs"
-            >
-              <option value="ALL" className="bg-slate-900">All Company Departments</option>
-              <option value="Engineering" className="bg-slate-900">Engineering & Cloud</option>
-              <option value="Operations" className="bg-slate-900">Operations & Legal</option>
-              <option value="Sales" className="bg-slate-900">Sales & Marketing</option>
-            </select>
+              options={[
+                { value: 'ALL', label: 'All Company Departments' },
+                { value: 'Engineering', label: 'Engineering & Cloud' },
+                { value: 'Operations', label: 'Operations & Legal' },
+                { value: 'Sales', label: 'Sales & Marketing' },
+              ]}
+            />
           </div>
         </div>
       </GlassCard>

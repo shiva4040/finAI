@@ -10,10 +10,14 @@ import { Modal } from '../components/common/Modal';
 import { ConfirmModal } from '../components/common/ConfirmModal';
 import { EmptyState } from '../components/common/EmptyState';
 import { AddTransactionModal } from '../components/modals/AddTransactionModal';
+import { AddCategoryModal } from '../components/modals/AddCategoryModal';
+import { ImportCSVModal } from '../components/modals/ImportCSVModal';
 import { formatCurrency, formatDate } from '../utils/formatters';
 import {
   Plus,
   Download,
+  Upload,
+  Layers,
   Search,
   SlidersHorizontal,
   TrendingUp,
@@ -41,6 +45,8 @@ export const TransactionsPage = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(
     location.state?.openAddModal || false
   );
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [isAddCategoryModalOpen, setIsAddCategoryModalOpen] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState(null);
   const [viewingTransaction, setViewingTransaction] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
@@ -142,6 +148,22 @@ export const TransactionsPage = () => {
             onClick={handleExportCSV}
           >
             Export CSV
+          </Button>
+          <Button
+            variant="outline"
+            size="md"
+            icon={Upload}
+            onClick={() => setIsImportModalOpen(true)}
+          >
+            Import CSV
+          </Button>
+          <Button
+            variant="outline"
+            size="md"
+            icon={Layers}
+            onClick={() => setIsAddCategoryModalOpen(true)}
+          >
+            + Category
           </Button>
           <Button
             variant="primary"
@@ -261,7 +283,7 @@ export const TransactionsPage = () => {
                         {formatDate(tx.date)}
                       </td>
                       <td className="py-3 px-4">
-                        <div className="flex items-center gap-2.5 max-w-xs">
+                        <div className="flex items-center gap-2.5 max-w-xs min-w-0">
                           <div
                             className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 border ${
                               isIncome
@@ -275,11 +297,11 @@ export const TransactionsPage = () => {
                               <TrendingDown className="w-3.5 h-3.5" />
                             )}
                           </div>
-                          <div className="truncate">
+                          <div className="truncate min-w-0 flex-1">
                             <p className="font-semibold text-slate-200 group-hover:text-white truncate">
                               {tx.description}
                             </p>
-                            <span className="text-[10px] text-slate-500 font-mono">
+                            <span className="text-[10px] text-slate-500 font-mono block truncate">
                               {tx.reference || tx.id}
                             </span>
                           </div>
@@ -352,6 +374,11 @@ export const TransactionsPage = () => {
           title="Transaction Details"
           subtitle={`Ledger Reference ID: ${viewingTransaction.id}`}
           maxWidth="max-w-lg"
+          footer={
+            <Button variant="secondary" onClick={() => setViewingTransaction(null)}>
+              Close
+            </Button>
+          }
         >
           <div className="space-y-4 text-xs">
             <div className="p-4 rounded-xl glass-subtle flex items-center justify-between">
@@ -376,7 +403,7 @@ export const TransactionsPage = () => {
               </Badge>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="p-3 rounded-lg glass-subtle">
                 <span className="text-slate-400 text-[10px] uppercase">Transaction Date</span>
                 <p className="font-semibold text-slate-200 mt-0.5">{formatDate(viewingTransaction.date)}</p>
@@ -408,12 +435,6 @@ export const TransactionsPage = () => {
                 <p className="text-slate-300 mt-1 leading-relaxed">{viewingTransaction.notes}</p>
               </div>
             )}
-
-            <div className="flex justify-end pt-3 border-t border-white/10">
-              <Button variant="secondary" onClick={() => setViewingTransaction(null)}>
-                Close
-              </Button>
-            </div>
           </div>
         </Modal>
       )}
@@ -431,6 +452,18 @@ export const TransactionsPage = () => {
           editItem={editingTransaction}
         />
       )}
+
+      {/* Import CSV Modal */}
+      <ImportCSVModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
+      />
+
+      {/* Add Category Modal */}
+      <AddCategoryModal
+        isOpen={isAddCategoryModalOpen}
+        onClose={() => setIsAddCategoryModalOpen(false)}
+      />
 
       {/* Delete Confirmation Modal */}
       <ConfirmModal

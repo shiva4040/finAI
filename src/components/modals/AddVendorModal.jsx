@@ -108,8 +108,23 @@ export const AddVendorModal = ({ isOpen, onClose, editVendor = null }) => {
       title={editVendor ? 'Edit Vendor' : 'Add New Vendor'}
       subtitle="Register suppliers, SaaS tools, and service providers"
       maxWidth="max-w-lg"
+      footer={
+        <>
+          <Button variant="ghost" onClick={onClose} disabled={isSubmitting}>
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            form="add-vendor-form"
+            variant="primary"
+            isLoading={isSubmitting}
+          >
+            {editVendor ? 'Update Vendor' : 'Save Vendor'}
+          </Button>
+        </>
+      }
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form id="add-vendor-form" onSubmit={handleSubmit} className="space-y-4">
         <Input
           label="Vendor / Provider Name"
           placeholder="e.g. Amazon Web Services"
@@ -165,15 +180,6 @@ export const AddVendorModal = ({ isOpen, onClose, editVendor = null }) => {
             onChange={(e) => setFormData({ ...formData, paymentTerms: e.target.value })}
             options={paymentTermsOptions}
           />
-        </div>
-
-        <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
-          <Button variant="ghost" onClick={onClose} disabled={isSubmitting}>
-            Cancel
-          </Button>
-          <Button type="submit" variant="primary" isLoading={isSubmitting}>
-            {editVendor ? 'Update Vendor' : 'Save Vendor'}
-          </Button>
         </div>
       </form>
     </Modal>

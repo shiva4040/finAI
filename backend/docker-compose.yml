@@ -1,0 +1,54 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: finai_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-finai_db}
+      POSTGRES_USER: ${POSTGRES_USER:-finai_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-finai_password}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - finai_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-finai_user} -d ${POSTGRES_DB:-finai_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - finai_network
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: finai_backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-finai_user}:${POSTGRES_PASSWORD:-finai_password}@db:5432/${POSTGRES_DB:-finai_db}
+      DATABASE_SYNC_URL: postgresql+psycopg://${POSTGRES_USER:-finai_user}:${POSTGRES_PASSWORD:-finai_password}@db:5432/${POSTGRES_DB:-finai_db}
+      APP_ENV: production
+      DEBUG: "False"
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-finai_super_secret_jwt_key_change_in_production_min32bytes_required}
+      JWT_ALGORITHM: ${JWT_ALGORITHM:-HS256}
+      ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-30}
+      REFRESH_TOKEN_EXPIRE_DAYS: ${REFRESH_TOKEN_EXPIRE_DAYS:-7}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
+    ports:
+      - "8000:8000"
+    networks:
+      - finai_network
+
+volumes:
+  finai_pgdata:
+    driver: local
+
+networks:
+  finai_network:
+    driver: bridge

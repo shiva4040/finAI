@@ -5,9 +5,11 @@ import { useToast } from '../context/ToastContext';
 import { GlassCard } from '../components/common/GlassCard';
 import { StatCard } from '../components/common/StatCard';
 import { Button } from '../components/common/Button';
+import { Input, Select } from '../components/common/Input';
 import { Badge } from '../components/common/Badge';
 import { EmptyState } from '../components/common/EmptyState';
 import { ConfirmModal } from '../components/common/ConfirmModal';
+import { CreateInvoiceModal } from '../components/modals/CreateInvoiceModal';
 import { AIInsightCard } from '../components/common/AIInsightCard';
 import { formatCurrency, formatDate } from '../utils/formatters';
 import {
@@ -32,6 +34,7 @@ export const InvoicesPage = () => {
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [customerFilter, setCustomerFilter] = useState('ALL');
   const [deletingId, setDeletingId] = useState(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const filteredInvoices = useMemo(() => {
     return invoices.filter((inv) => {
@@ -91,7 +94,7 @@ export const InvoicesPage = () => {
           variant="primary"
           size="md"
           icon={Plus}
-          onClick={() => navigate('/invoices/create')}
+          onClick={() => setIsCreateModalOpen(true)}
         >
           Create New Invoice
         </Button>
@@ -153,44 +156,39 @@ export const InvoicesPage = () => {
       <GlassCard className="p-4 sm:p-5">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
           <div className="sm:col-span-1">
-            <input
-              type="text"
+            <Input
+              icon={Search}
               placeholder="Search by invoice # or client..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full glass-input rounded-xl px-3.5 py-2 text-xs placeholder:text-slate-500"
             />
           </div>
 
           <div>
-            <select
+            <Select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full glass-input rounded-xl px-3 py-2 text-xs"
-            >
-              <option value="ALL" className="bg-slate-900 text-slate-100">All Statuses</option>
-              <option value="Paid" className="bg-slate-900 text-slate-100">Paid</option>
-              <option value="Pending" className="bg-slate-900 text-slate-100">Pending</option>
-              <option value="Partially Paid" className="bg-slate-900 text-slate-100">Partially Paid</option>
-              <option value="Overdue" className="bg-slate-900 text-slate-100">Overdue</option>
-              <option value="Draft" className="bg-slate-900 text-slate-100">Draft</option>
-              <option value="Cancelled" className="bg-slate-900 text-slate-100">Cancelled</option>
-            </select>
+              options={[
+                { value: 'ALL', label: 'All Statuses' },
+                { value: 'Paid', label: 'Paid' },
+                { value: 'Pending', label: 'Pending' },
+                { value: 'Partially Paid', label: 'Partially Paid' },
+                { value: 'Overdue', label: 'Overdue' },
+                { value: 'Draft', label: 'Draft' },
+                { value: 'Cancelled', label: 'Cancelled' },
+              ]}
+            />
           </div>
 
           <div>
-            <select
+            <Select
               value={customerFilter}
               onChange={(e) => setCustomerFilter(e.target.value)}
-              className="w-full glass-input rounded-xl px-3 py-2 text-xs"
-            >
-              <option value="ALL" className="bg-slate-900 text-slate-100">All Corporate Clients</option>
-              {customers.map((c) => (
-                <option key={c.id} value={c.id} className="bg-slate-900 text-slate-100">
-                  {c.name}
-                </option>
-              ))}
-            </select>
+              options={[
+                { value: 'ALL', label: 'All Corporate Clients' },
+                ...customers.map((c) => ({ value: c.id, label: c.name })),
+              ]}
+            />
           </div>
         </div>
       </GlassCard>
@@ -229,11 +227,11 @@ export const InvoicesPage = () => {
                     <td className="py-3.5 px-4 font-mono font-bold text-indigo-400 whitespace-nowrap">
                       {inv.id}
                     </td>
-                    <td className="py-3.5 px-4">
-                      <p className="font-semibold text-slate-200 group-hover:text-white">
+                    <td className="py-3.5 px-4 max-w-xs min-w-0">
+                      <p className="font-semibold text-slate-200 group-hover:text-white truncate">
                         {inv.customerName}
                       </p>
-                      <span className="text-[10px] text-slate-400">{inv.customerEmail}</span>
+                      <span className="text-[10px] text-slate-400 block truncate">{inv.customerEmail}</span>
                     </td>
                     <td className="py-3.5 px-4 text-slate-400 whitespace-nowrap font-mono">
                       {formatDate(inv.issueDate)}
@@ -284,6 +282,12 @@ export const InvoicesPage = () => {
           </div>
         )}
       </GlassCard>
+
+      {/* Create Invoice Modal */}
+      <CreateInvoiceModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+      />
 
       {/* Delete Confirmation */}
       <ConfirmModal

@@ -28,7 +28,7 @@ export const Navbar = ({ onToggleMobile }) => {
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [isNewMenuOpen, setIsNewMenuOpen] = useState(false);
 
-  const unreadCount = notifications.filter((n) => !n.read).length;
+  const unreadCount = notifications.filter((n) => !n.is_read && !n.read).length;
 
   // Keyboard shortcut Cmd/Ctrl + K for search
   useEffect(() => {
@@ -45,12 +45,12 @@ export const Navbar = ({ onToggleMobile }) => {
   return (
     <>
       <header className="sticky top-0 z-30 w-full glass-panel border-b border-slate-200/80 dark:border-white/10 px-4 sm:px-6 lg:px-8 py-3.5 backdrop-blur-md">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center justify-between gap-3 sm:gap-4">
           {/* Left: Mobile hamburger & Global Search Trigger */}
-          <div className="flex items-center gap-3 flex-1 max-w-lg">
+          <div className="flex items-center gap-2.5 sm:gap-3 flex-1 min-w-0 max-w-lg">
             <button
               onClick={onToggleMobile}
-              className="lg:hidden p-2 rounded-xl text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors"
+              className="lg:hidden p-2 rounded-xl text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors shrink-0"
               aria-label="Open sidebar"
             >
               <Menu className="w-5 h-5" />
@@ -59,20 +59,21 @@ export const Navbar = ({ onToggleMobile }) => {
             {/* Omnisearch trigger button */}
             <button
               onClick={() => setIsSearchOpen(true)}
-              className="w-full max-w-md flex items-center justify-between px-3.5 py-2 rounded-xl glass-input text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 hover:border-indigo-500/40 transition-all text-xs group"
+              className="w-full max-w-md flex items-center justify-between px-3 sm:px-3.5 py-2 rounded-xl glass-input text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 hover:border-indigo-500/40 transition-all text-xs group min-w-0"
             >
-              <div className="flex items-center gap-2.5 truncate">
-                <Search className="w-4 h-4 text-slate-400 group-hover:text-indigo-500 transition-colors" />
-                <span className="truncate">Search transactions, invoices, entities...</span>
+              <div className="flex items-center gap-2 sm:gap-2.5 min-w-0 truncate">
+                <Search className="w-4 h-4 text-slate-400 group-hover:text-indigo-500 transition-colors shrink-0" />
+                <span className="hidden sm:inline truncate">Search transactions, invoices, entities...</span>
+                <span className="sm:hidden truncate">Search FinAI...</span>
               </div>
-              <div className="flex items-center gap-1 font-mono text-[10px] text-slate-500 dark:text-slate-400 bg-slate-200/50 dark:bg-white/5 px-2 py-0.5 rounded border border-slate-300/60 dark:border-white/10 shrink-0">
+              <div className="hidden sm:flex items-center gap-1 font-mono text-[10px] text-slate-500 dark:text-slate-400 bg-slate-200/50 dark:bg-white/5 px-2 py-0.5 rounded border border-slate-300/60 dark:border-white/10 shrink-0 ml-2">
                 <span>⌘</span>K
               </div>
             </button>
           </div>
 
           {/* Right: Quick actions, notifications, theme toggle, profile */}
-          <div className="flex items-center gap-2.5 sm:gap-3">
+          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
             {/* Quick "+ New" Dropdown */}
             <div className="relative">
               <button
@@ -125,10 +126,10 @@ export const Navbar = ({ onToggleMobile }) => {
               )}
             </div>
 
-            {/* AI Assistant Quick Pill */}
+            {/* AI Assistant Quick Pill (visible on xl screens to prevent 1024px collision) */}
             <NavLink
               to="/ai-assistant"
-              className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold glass-subtle hover:bg-indigo-50 dark:hover:bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-500/30 transition-all hover:scale-[1.02]"
+              className="hidden xl:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold glass-subtle hover:bg-indigo-50 dark:hover:bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-500/30 transition-all hover:scale-[1.02]"
             >
               <Sparkles className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400 animate-pulse" />
               <span>FinAI Copilot</span>

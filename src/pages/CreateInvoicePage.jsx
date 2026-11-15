@@ -315,7 +315,7 @@ export const CreateInvoicePage = () => {
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-3 text-xs">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                     <div>
                       <label className="block text-[10px] text-slate-400 uppercase mb-1">
                         Quantity
@@ -327,13 +327,13 @@ export const CreateInvoicePage = () => {
                         onChange={(e) =>
                           handleItemChange(item.id, 'quantity', Math.max(1, parseInt(e.target.value) || 1))
                         }
-                        className="w-full glass-input rounded-lg px-2.5 py-1.5 font-mono"
+                        className="w-full h-[38px] glass-input rounded-lg px-2.5 py-1.5 font-mono"
                       />
                     </div>
 
                     <div>
                       <label className="block text-[10px] text-slate-400 uppercase mb-1">
-                        Unit Price (₹)
+                        Unit Price ({currency === 'INR' ? '₹' : '$'})
                       </label>
                       <input
                         type="number"
@@ -342,7 +342,7 @@ export const CreateInvoicePage = () => {
                         onChange={(e) =>
                           handleItemChange(item.id, 'unitPrice', parseFloat(e.target.value) || 0)
                         }
-                        className="w-full glass-input rounded-lg px-2.5 py-1.5 font-mono"
+                        className="w-full h-[38px] glass-input rounded-lg px-2.5 py-1.5 font-mono"
                       />
                     </div>
 
@@ -355,7 +355,7 @@ export const CreateInvoicePage = () => {
                         onChange={(e) =>
                           handleItemChange(item.id, 'taxRate', parseFloat(e.target.value) || 0)
                         }
-                        className="w-full glass-input rounded-lg px-2 py-1.5 text-xs font-mono"
+                        className="w-full h-[38px] glass-input rounded-lg px-2 py-1.5 text-xs font-mono"
                       >
                         <option value="0" className="bg-slate-900">0% (Exempt)</option>
                         <option value="5" className="bg-slate-900">5% GST</option>
@@ -474,9 +474,26 @@ export const CreateInvoicePage = () => {
           isOpen={isPreviewOpen}
           onClose={() => setIsPreviewOpen(false)}
           title={`Invoice Preview: #${invoiceNumber}`}
+          subtitle="Official billing voucher preview before final registration"
           maxWidth="max-w-2xl"
+          footer={
+            <>
+              <Button variant="secondary" onClick={() => setIsPreviewOpen(false)}>
+                Back to Edit
+              </Button>
+              <Button
+                variant="primary"
+                onClick={() => {
+                  setIsPreviewOpen(false);
+                  handleSaveInvoice('Pending');
+                }}
+              >
+                Confirm & Create
+              </Button>
+            </>
+          }
         >
-          <div className="p-6 rounded-2xl glass-card border border-white/10 space-y-6 text-xs bg-slate-900/90">
+          <div className="space-y-6 text-xs">
             {/* Header */}
             <div className="flex items-start justify-between border-b border-white/10 pb-4">
               <div>
@@ -507,35 +524,37 @@ export const CreateInvoicePage = () => {
             </div>
 
             {/* Items */}
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-white/10 text-slate-400 text-[10px] uppercase">
-                  <th className="py-2">Item Description</th>
-                  <th className="py-2 text-center">Qty</th>
-                  <th className="py-2 text-right">Rate</th>
-                  <th className="py-2 text-right">Tax</th>
-                  <th className="py-2 text-right">Total</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/5">
-                {items.map((i) => (
-                  <tr key={i.id}>
-                    <td className="py-2 text-slate-200 font-medium">{i.description || 'Service'}</td>
-                    <td className="py-2 text-center font-mono text-slate-400">{i.quantity}</td>
-                    <td className="py-2 text-right font-mono text-slate-300">
-                      {formatCurrency(i.unitPrice, currency)}
-                    </td>
-                    <td className="py-2 text-right font-mono text-slate-400">{i.taxRate}%</td>
-                    <td className="py-2 text-right font-mono font-semibold text-slate-100">
-                      {formatCurrency(
-                        i.quantity * i.unitPrice * (1 + i.taxRate / 100),
-                        currency
-                      )}
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-white/10 text-slate-400 text-[10px] uppercase">
+                    <th className="py-2">Item Description</th>
+                    <th className="py-2 text-center">Qty</th>
+                    <th className="py-2 text-right">Rate</th>
+                    <th className="py-2 text-right">Tax</th>
+                    <th className="py-2 text-right">Total</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  {items.map((i) => (
+                    <tr key={i.id}>
+                      <td className="py-2 text-slate-200 font-medium">{i.description || 'Service'}</td>
+                      <td className="py-2 text-center font-mono text-slate-400">{i.quantity}</td>
+                      <td className="py-2 text-right font-mono text-slate-300">
+                        {formatCurrency(i.unitPrice, currency)}
+                      </td>
+                      <td className="py-2 text-right font-mono text-slate-400">{i.taxRate}%</td>
+                      <td className="py-2 text-right font-mono font-semibold text-slate-100">
+                        {formatCurrency(
+                          i.quantity * i.unitPrice * (1 + i.taxRate / 100),
+                          currency
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
             {/* Total Footer */}
             <div className="border-t border-white/10 pt-3 flex justify-end">
@@ -559,21 +578,6 @@ export const CreateInvoicePage = () => {
                   <span className="font-mono text-indigo-400">{formatCurrency(total, currency)}</span>
                 </div>
               </div>
-            </div>
-
-            <div className="flex justify-end gap-3 pt-3 border-t border-white/10">
-              <Button variant="secondary" onClick={() => setIsPreviewOpen(false)}>
-                Back to Edit
-              </Button>
-              <Button
-                variant="primary"
-                onClick={() => {
-                  setIsPreviewOpen(false);
-                  handleSaveInvoice('Pending');
-                }}
-              >
-                Confirm & Create
-              </Button>
             </div>
           </div>
         </Modal>

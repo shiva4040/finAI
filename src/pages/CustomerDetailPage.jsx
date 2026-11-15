@@ -125,32 +125,32 @@ export const CustomerDetailPage = () => {
       {/* Profile Overview Card */}
       <GlassCard className="p-5 sm:p-6">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-          <div className="flex items-start gap-3">
+          <div className="flex items-start gap-3 min-w-0">
             <Mail className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
-            <div>
+            <div className="min-w-0">
               <span className="text-[10px] text-slate-400 uppercase font-semibold">
                 Billing Email
               </span>
-              <p className="font-semibold text-slate-200 mt-0.5">{customer.email}</p>
-              <p className="text-slate-400">{customer.contactPerson}</p>
+              <p className="font-semibold text-slate-200 mt-0.5 truncate">{customer.email}</p>
+              <p className="text-slate-400 truncate">{customer.contactPerson}</p>
             </div>
           </div>
 
-          <div className="flex items-start gap-3">
+          <div className="flex items-start gap-3 min-w-0">
             <Phone className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-            <div>
+            <div className="min-w-0">
               <span className="text-[10px] text-slate-400 uppercase font-semibold">
                 Phone Contact
               </span>
-              <p className="font-semibold text-slate-200 mt-0.5 font-mono">
+              <p className="font-semibold text-slate-200 mt-0.5 font-mono truncate">
                 {customer.phone || 'N/A'}
               </p>
             </div>
           </div>
 
-          <div className="flex items-start gap-3">
+          <div className="flex items-start gap-3 min-w-0">
             <MapPin className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-            <div>
+            <div className="min-w-0">
               <span className="text-[10px] text-slate-400 uppercase font-semibold">
                 Corporate Address
               </span>

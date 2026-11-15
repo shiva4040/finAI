@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useFinance } from '../../context/FinanceContext';
@@ -23,6 +23,20 @@ export const Sidebar = ({ mobileOpen, setMobileOpen, collapsed, setCollapsed }) 
   const { user, logout } = useAuth();
   const { invoiceSummary } = useFinance();
   const navigate = useNavigate();
+
+  // Prevent background scrolling and handle ESC when mobile drawer is open
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setMobileOpen(false);
+    };
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = 'unset';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [mobileOpen, setMobileOpen]);
 
   const handleLogout = () => {
     logout();
@@ -58,7 +72,7 @@ export const Sidebar = ({ mobileOpen, setMobileOpen, collapsed, setCollapsed }) 
   const sidebarContent = (
     <div className="flex flex-col h-full select-none">
       {/* Brand Header */}
-      <div className="flex items-center justify-between px-6 py-5 border-b border-white/10">
+      <div className="flex items-center justify-between px-6 py-5 border-b border-white/10 shrink-0">
         <NavLink to="/dashboard" className="flex items-center gap-3 group">
           <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-indigo-800 text-white shadow-lg shadow-indigo-600/30 border border-indigo-400/30 group-hover:scale-105 transition-transform">
             <Sparkles className="w-5 h-5 text-indigo-100" />
@@ -91,7 +105,7 @@ export const Sidebar = ({ mobileOpen, setMobileOpen, collapsed, setCollapsed }) 
       </div>
 
       {/* Navigation Links */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-1">
+      <div className="flex-1 min-h-0 overflow-y-auto px-4 py-4 space-y-1">
         <div className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
           Core Operating System
         </div>
@@ -142,7 +156,7 @@ export const Sidebar = ({ mobileOpen, setMobileOpen, collapsed, setCollapsed }) 
       </div>
 
       {/* Bottom User Profile Section */}
-      <div className="p-4 border-t border-white/10 bg-slate-900/40">
+      <div className="p-4 border-t border-white/10 bg-slate-900/40 shrink-0">
         <div className="flex items-center justify-between p-2 rounded-xl glass-subtle">
           <NavLink
             to="/settings/profile"

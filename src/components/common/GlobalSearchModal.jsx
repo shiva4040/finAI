@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { useFinance } from '../../context/FinanceContext';
 import { formatCurrency, formatDate } from '../../utils/formatters';
@@ -110,21 +111,25 @@ export const GlobalSearchModal = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4">
+  const content = (
+    <div
+      role="dialog"
+      aria-modal="true"
+      className="fixed inset-0 z-[9999] flex items-start justify-center pt-8 sm:pt-16 p-3 sm:p-4 overflow-hidden"
+    >
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-slate-950/70 backdrop-blur-md transition-opacity"
+        className="fixed inset-0 bg-slate-950/75 backdrop-blur-md transition-opacity"
         onClick={onClose}
       />
 
       {/* Search Palette Container */}
       <div
-        className="relative w-full max-w-2xl glass-panel rounded-2xl border border-white/10 shadow-2xl overflow-hidden animate-fade-in z-10"
+        className="relative w-full max-w-2xl glass-panel rounded-2xl border border-slate-200/80 dark:border-white/10 shadow-2xl overflow-hidden animate-fade-in z-10 flex flex-col max-h-[calc(100dvh-4rem)] m-auto"
         onKeyDown={handleKeyDown}
       >
         {/* Search Bar Input */}
-        <div className="flex items-center gap-3 px-5 py-4 border-b border-white/10 bg-slate-900/40">
+        <div className="flex items-center gap-3 px-5 py-4 border-b border-slate-200/80 dark:border-white/10 bg-slate-100/50 dark:bg-slate-900/60 shrink-0">
           <Search className="w-5 h-5 text-indigo-400 shrink-0" />
           <input
             ref={inputRef}
@@ -132,7 +137,7 @@ export const GlobalSearchModal = ({ isOpen, onClose }) => {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search transactions, invoices, customers, vendors... (Esc to close)"
-            className="w-full bg-transparent text-slate-100 placeholder:text-slate-500 text-sm focus:outline-none"
+            className="w-full bg-transparent text-slate-800 dark:text-slate-100 placeholder:text-slate-500 text-sm focus:outline-none"
           />
           {query && (
             <button
@@ -148,7 +153,7 @@ export const GlobalSearchModal = ({ isOpen, onClose }) => {
         </div>
 
         {/* Results Body */}
-        <div className="max-h-[60vh] overflow-y-auto p-3 space-y-4">
+        <div className="flex-1 min-h-0 overflow-y-auto p-3 space-y-4">
           {!query && (
             <div className="py-10 text-center">
               <Search className="w-8 h-8 text-slate-600 mx-auto mb-2" />
@@ -318,4 +323,6 @@ export const GlobalSearchModal = ({ isOpen, onClose }) => {
       </div>
     </div>
   );
+
+  return createPortal(content, document.body);
 };

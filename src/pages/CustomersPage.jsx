@@ -162,22 +162,22 @@ export const CustomersPage = () => {
                     onClick={() => navigate(`/customers/${cust.id}`)}
                   >
                     <td className="py-3.5 px-4">
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-3 min-w-0 max-w-xs">
                         <div className="w-8 h-8 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-xs uppercase shrink-0">
                           {cust.name.slice(0, 2)}
                         </div>
-                        <div>
-                          <p className="font-semibold text-slate-200 group-hover:text-indigo-400 transition-colors">
+                        <div className="min-w-0 flex-1">
+                          <p className="font-semibold text-slate-200 group-hover:text-indigo-400 transition-colors truncate">
                             {cust.name}
                           </p>
-                          <span className="text-[10px] text-slate-400">{cust.company}</span>
+                          <span className="text-[10px] text-slate-400 truncate block">{cust.company}</span>
                         </div>
                       </div>
                     </td>
 
                     <td className="py-3.5 px-4">
-                      <p className="text-slate-300 font-medium">{cust.contactPerson}</p>
-                      <p className="text-[10px] text-slate-400">{cust.email}</p>
+                      <p className="text-slate-300 font-medium truncate">{cust.contactPerson}</p>
+                      <p className="text-[10px] text-slate-400 truncate">{cust.email}</p>
                     </td>
 
                     <td className="py-3.5 px-4 text-right font-mono font-semibold text-slate-200 whitespace-nowrap">

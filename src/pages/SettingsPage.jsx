@@ -299,23 +299,23 @@ export const SettingsPage = () => {
 
             <div className="divide-y divide-white/5 space-y-2">
               {sessions.map((sess) => (
-                <div key={sess.id} className="pt-2 flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-xl glass-subtle text-slate-400">
+                <div key={sess.id} className="pt-2 flex items-center justify-between text-xs gap-3">
+                  <div className="flex items-center gap-3 min-w-0 flex-1">
+                    <div className="p-2 rounded-xl glass-subtle text-slate-400 shrink-0">
                       {sess.device.includes('iPhone') ? (
                         <Smartphone className="w-4 h-4" />
                       ) : (
                         <Laptop className="w-4 h-4" />
                       )}
                     </div>
-                    <div>
+                    <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="font-semibold text-slate-200">{sess.device}</span>
+                        <span className="font-semibold text-slate-200 truncate">{sess.device}</span>
                         {sess.active && (
                           <Badge variant="income" size="sm">Current</Badge>
                         )}
                       </div>
-                      <p className="text-[10px] text-slate-400 font-mono">
+                      <p className="text-[10px] text-slate-400 font-mono truncate">
                         {sess.ip} • {sess.location} • Last active: {sess.lastActive}
                       </p>
                     </div>
@@ -324,7 +324,7 @@ export const SettingsPage = () => {
                   {!sess.active && (
                     <button
                       onClick={() => handleRevokeSession(sess.id)}
-                      className="text-xs text-rose-400 hover:text-rose-300 transition-colors p-2"
+                      className="text-xs text-rose-400 hover:text-rose-300 transition-colors p-2 shrink-0"
                       title="Revoke session"
                     >
                       <Trash2 className="w-4 h-4" />

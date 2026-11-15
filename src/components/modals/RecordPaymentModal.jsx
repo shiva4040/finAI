@@ -76,8 +76,23 @@ export const RecordPaymentModal = ({ isOpen, onClose, invoice }) => {
       title="Record Invoice Payment"
       subtitle={`Receive settlement for invoice #${invoice.id} (${invoice.customerName})`}
       maxWidth="max-w-md"
+      footer={
+        <>
+          <Button variant="ghost" onClick={onClose} disabled={isSubmitting}>
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            form="record-payment-form"
+            variant="success"
+            isLoading={isSubmitting}
+          >
+            Confirm Payment
+          </Button>
+        </>
+      }
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form id="record-payment-form" onSubmit={handleSubmit} className="space-y-4">
         {/* Invoice Balance Summary Banner */}
         <div className="p-3.5 rounded-xl glass-subtle flex items-center justify-between text-xs">
           <div>
@@ -141,15 +156,6 @@ export const RecordPaymentModal = ({ isOpen, onClose, invoice }) => {
             onChange={(e) => setNotes(e.target.value)}
             className="w-full glass-input rounded-xl px-3.5 py-2.5 text-sm resize-none"
           />
-        </div>
-
-        <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
-          <Button variant="ghost" onClick={onClose} disabled={isSubmitting}>
-            Cancel
-          </Button>
-          <Button type="submit" variant="success" isLoading={isSubmitting}>
-            Confirm Payment
-          </Button>
         </div>
       </form>
     </Modal>

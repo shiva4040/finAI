@@ -26,17 +26,20 @@ export const StatCard = ({
 
   return (
     <GlassCard className={`relative overflow-hidden group ${className}`}>
-      <div className="flex items-start justify-between">
-        <div>
-          <p className="text-xs font-medium uppercase tracking-wider text-slate-400">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <p className="text-xs font-medium uppercase tracking-wider text-slate-400 truncate">
             {title}
           </p>
-          <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-100 mt-2 font-sans">
+          <h3
+            className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-slate-100 mt-2 font-sans truncate"
+            title={typeof value === 'string' ? value : undefined}
+          >
             {value}
           </h3>
         </div>
         {Icon && (
-          <div className={`p-3 rounded-xl border ${iconColors[accentColor] || iconColors.indigo} transition-transform duration-300 group-hover:scale-105`}>
+          <div className={`p-2.5 sm:p-3 rounded-xl border ${iconColors[accentColor] || iconColors.indigo} transition-transform duration-300 group-hover:scale-105 shrink-0`}>
             <Icon className="w-5 h-5" />
           </div>
         )}

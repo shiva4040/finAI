@@ -8,7 +8,7 @@ export const GlassCard = ({ children, className = '', glow = false, onClick, ...
       onClick={onClick}
       className={twMerge(
         clsx(
-          'glass-panel rounded-2xl p-6 transition-all duration-200',
+          'glass-panel rounded-2xl p-4 sm:p-6 transition-all duration-200 min-w-0',
           glow && 'hover:shadow-glass-glow',
           onClick && 'cursor-pointer hover:border-indigo-500/30',
           className

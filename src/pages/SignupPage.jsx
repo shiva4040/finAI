@@ -83,13 +83,13 @@ export const SignupPage = () => {
   };
 
   return (
-    <div className="min-h-screen relative flex items-center justify-center p-4 sm:p-6 bg-fin-bg-light dark:bg-fin-bg-dark overflow-hidden">
+    <div className="min-h-[100dvh] relative flex items-center justify-center p-4 sm:p-6 bg-fin-bg-light dark:bg-fin-bg-dark overflow-x-hidden">
       <div className="ambient-glow" aria-hidden="true">
         <div className="ambient-circle-1" />
         <div className="ambient-circle-2" />
       </div>
 
-      <div className="w-full max-w-md relative z-10 animate-fade-in my-8">
+      <div className="w-full max-w-md relative z-10 animate-fade-in my-auto py-6">
         <div className="text-center mb-6">
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-indigo-800 text-white shadow-xl shadow-indigo-600/30 border border-indigo-400/30 mb-3 animate-pulse-subtle">
             <Sparkles className="w-6 h-6 text-indigo-100" />
@@ -102,7 +102,7 @@ export const SignupPage = () => {
           </p>
         </div>
 
-        <div className="glass-panel rounded-2xl border border-white/10 shadow-2xl p-6 sm:p-8 backdrop-blur-xl">
+        <div className="glass-panel rounded-2xl border border-white/10 shadow-2xl p-5 sm:p-8 backdrop-blur-xl">
           <form onSubmit={handleSignup} className="space-y-3.5">
             <Input
               label="Full Name"

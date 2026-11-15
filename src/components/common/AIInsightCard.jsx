@@ -45,11 +45,11 @@ export const AIInsightCard = ({
       className={`relative overflow-hidden rounded-2xl p-4 sm:p-5 glass-panel border border-indigo-500/25 bg-gradient-to-r from-indigo-50/80 via-white/90 to-indigo-50/40 dark:from-indigo-950/20 dark:via-slate-900/40 dark:to-slate-900/20 ${className}`}
     >
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-start gap-3.5">
+        <div className="flex items-start gap-3.5 min-w-0 flex-1">
           <div className="p-2.5 rounded-xl bg-indigo-500/15 border border-indigo-500/30 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5 shadow-sm shadow-indigo-500/20">
             <Sparkles className="w-4 h-4" />
           </div>
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center gap-2">
               <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
                 {contextLabel}

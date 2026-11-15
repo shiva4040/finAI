@@ -138,8 +138,23 @@ export const AddTransactionModal = ({
       title={editItem ? 'Edit Transaction' : 'Record New Transaction'}
       subtitle="Enter financial transaction details to maintain accurate ledger balancing"
       maxWidth="max-w-xl"
+      footer={
+        <>
+          <Button variant="ghost" onClick={onClose} disabled={isSubmitting}>
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            form="add-transaction-form"
+            variant={formData.type === 'Income' ? 'success' : 'primary'}
+            isLoading={isSubmitting}
+          >
+            {editItem ? 'Save Changes' : `Confirm ${formData.type}`}
+          </Button>
+        </>
+      }
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form id="add-transaction-form" onSubmit={handleSubmit} className="space-y-4">
         {/* Type Toggle: Income vs Expense */}
         <div className="grid grid-cols-2 gap-3 p-1 rounded-xl glass-subtle">
           <button
@@ -262,20 +277,6 @@ export const AddTransactionModal = ({
             placeholder="Add reconciliation notes, tax codes, or milestone descriptions..."
             className="w-full glass-input rounded-xl px-3.5 py-2.5 text-sm resize-none"
           />
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
-          <Button variant="ghost" onClick={onClose} disabled={isSubmitting}>
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            variant={formData.type === 'Income' ? 'success' : 'primary'}
-            isLoading={isSubmitting}
-          >
-            {editItem ? 'Save Changes' : `Confirm ${formData.type}`}
-          </Button>
         </div>
       </form>
     </Modal>

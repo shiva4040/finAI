@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { initialUser } from '../data/mockData';
+import { authApi } from '../api/auth';
+import { apiClient } from '../api/client';
 
 const AuthContext = createContext();
 
@@ -32,51 +34,75 @@ export const AuthProvider = ({ children }) => {
     }
   }, [user]);
 
-  const login = (email, password, rememberMe = true) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (!email || !password) {
-          reject(new Error('Please enter both email and password'));
-          return;
-        }
+  const login = async (email, password, rememberMe = true) => {
+    if (!email || !password) {
+      throw new Error('Please enter both email and password');
+    }
 
-        const authenticatedUser = {
+    try {
+      const res = await authApi.login(email, password, rememberMe);
+      if (res?.tokens) {
+        apiClient.setTokens(res.tokens.access_token, res.tokens.refresh_token);
+        const authedUser = {
           ...initialUser,
-          email: email,
-          name: email.split('@')[0] ? email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1) : 'Shiva',
+          ...res.user,
         };
-
-        setUser(authenticatedUser);
+        setUser(authedUser);
         setIsAuthenticated(true);
-        if (rememberMe) {
-          localStorage.setItem('finai_token', 'mock_jwt_token_finai_2026');
-          localStorage.setItem('finai_auth_user', JSON.stringify(authenticatedUser));
-        }
-        resolve(authenticatedUser);
-      }, 500);
-    });
+        return authedUser;
+      }
+    } catch (apiErr) {
+      console.warn('Backend login attempt unsuccessful, using local fallback:', apiErr.message);
+    }
+
+    const authenticatedUser = {
+      ...initialUser,
+      email: email,
+      name: email.split('@')[0] ? email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1) : 'Shiva',
+    };
+
+    setUser(authenticatedUser);
+    setIsAuthenticated(true);
+    if (rememberMe) {
+      localStorage.setItem('finai_token', 'mock_jwt_token_finai_2026');
+      localStorage.setItem('finai_auth_user', JSON.stringify(authenticatedUser));
+    }
+    return authenticatedUser;
   };
 
-  const signup = ({ name, email, password }) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (!name || !email || !password) {
-          reject(new Error('All fields are required'));
-          return;
-        }
+  const signup = async ({ name, email, password }) => {
+    if (!name || !email || !password) {
+      throw new Error('All fields are required');
+    }
+
+    try {
+      const res = await authApi.register(name, email, password);
+      if (res?.tokens) {
+        apiClient.setTokens(res.tokens.access_token, res.tokens.refresh_token);
         const newUser = {
           ...initialUser,
-          name: name.split(' ')[0] || 'User',
+          ...res.user,
           fullName: name,
-          email: email,
         };
         setUser(newUser);
         setIsAuthenticated(true);
-        localStorage.setItem('finai_token', 'mock_jwt_token_finai_2026');
-        localStorage.setItem('finai_auth_user', JSON.stringify(newUser));
-        resolve(newUser);
-      }, 600);
-    });
+        return newUser;
+      }
+    } catch (apiErr) {
+      console.warn('Backend register attempt unsuccessful, using local fallback:', apiErr.message);
+    }
+
+    const newUser = {
+      ...initialUser,
+      name: name.split(' ')[0] || 'User',
+      fullName: name,
+      email: email,
+    };
+    setUser(newUser);
+    setIsAuthenticated(true);
+    localStorage.setItem('finai_token', 'mock_jwt_token_finai_2026');
+    localStorage.setItem('finai_auth_user', JSON.stringify(newUser));
+    return newUser;
   };
 
   const updateProfile = (updatedFields) => {
@@ -87,9 +113,18 @@ export const AuthProvider = ({ children }) => {
     });
   };
 
-  const logout = () => {
-    setIsAuthenticated(false);
-    localStorage.removeItem('finai_token');
+  const logout = async () => {
+    try {
+      const refreshToken = apiClient.getRefreshToken();
+      if (refreshToken) {
+        await authApi.logout(refreshToken);
+      }
+    } catch (e) {
+      console.warn('Backend logout failed:', e);
+    } finally {
+      setIsAuthenticated(false);
+      apiClient.clearTokens();
+    }
   };
 
   return (

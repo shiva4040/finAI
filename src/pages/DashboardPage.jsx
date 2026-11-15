@@ -417,7 +417,7 @@ export const DashboardPage = () => {
           </NavLink>
         </div>
 
-        <div className="overflow-x-auto -mx-6 px-6">
+        <div className="overflow-x-auto -mx-4 sm:-mx-6 px-4 sm:px-6">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
               <tr className="border-b border-white/10 text-slate-400 uppercase tracking-wider font-semibold text-[10px]">

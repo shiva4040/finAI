@@ -111,36 +111,36 @@ export const VendorDetailPage = () => {
           Vendor & Billing Contact Information
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-          <div className="flex items-start gap-3">
+          <div className="flex items-start gap-3 min-w-0">
             <Mail className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
-            <div>
+            <div className="min-w-0">
               <span className="text-[10px] text-slate-400 uppercase font-semibold">
                 Invoicing Contact
               </span>
-              <p className="font-semibold text-slate-200 mt-0.5">{vendor.email}</p>
-              <p className="text-slate-400">{vendor.contactPerson}</p>
+              <p className="font-semibold text-slate-200 mt-0.5 truncate">{vendor.email}</p>
+              <p className="text-slate-400 truncate">{vendor.contactPerson}</p>
             </div>
           </div>
 
-          <div className="flex items-start gap-3">
+          <div className="flex items-start gap-3 min-w-0">
             <Phone className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-            <div>
+            <div className="min-w-0">
               <span className="text-[10px] text-slate-400 uppercase font-semibold">
                 Account Telephone
               </span>
-              <p className="font-semibold text-slate-200 mt-0.5 font-mono">
+              <p className="font-semibold text-slate-200 mt-0.5 font-mono truncate">
                 {vendor.phone || 'N/A'}
               </p>
             </div>
           </div>
 
-          <div className="flex items-start gap-3">
+          <div className="flex items-start gap-3 min-w-0">
             <Calendar className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-            <div>
+            <div className="min-w-0">
               <span className="text-[10px] text-slate-400 uppercase font-semibold">
                 Last Transaction Date
               </span>
-              <p className="font-semibold text-slate-200 mt-0.5 font-mono">
+              <p className="font-semibold text-slate-200 mt-0.5 font-mono truncate">
                 {formatDate(vendor.lastTransactionDate)}
               </p>
             </div>

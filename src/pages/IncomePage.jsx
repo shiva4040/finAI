@@ -4,15 +4,18 @@ import { useToast } from '../context/ToastContext';
 import { GlassCard } from '../components/common/GlassCard';
 import { StatCard } from '../components/common/StatCard';
 import { Button } from '../components/common/Button';
+import { Input } from '../components/common/Input';
 import { Badge } from '../components/common/Badge';
 import { EmptyState } from '../components/common/EmptyState';
 import { ConfirmModal } from '../components/common/ConfirmModal';
-import { AddTransactionModal } from '../components/modals/AddTransactionModal';
+import { AddIncomeModal } from '../components/modals/AddIncomeModal';
+import { ImportCSVModal } from '../components/modals/ImportCSVModal';
 import { AIInsightCard } from '../components/common/AIInsightCard';
 import { formatCurrency, formatDate } from '../utils/formatters';
 import {
   TrendingUp,
   Plus,
+  Upload,
   Edit2,
   Trash2,
   Layers,
@@ -35,6 +38,7 @@ export const IncomePage = () => {
   const { showToast } = useToast();
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -81,14 +85,24 @@ export const IncomePage = () => {
           </p>
         </div>
 
-        <Button
-          variant="success"
-          size="md"
-          icon={Plus}
-          onClick={() => setIsAddModalOpen(true)}
-        >
-          Add Income Entry
-        </Button>
+        <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap">
+          <Button
+            variant="outline"
+            size="md"
+            icon={Upload}
+            onClick={() => setIsImportModalOpen(true)}
+          >
+            Import CSV
+          </Button>
+          <Button
+            variant="success"
+            size="md"
+            icon={Plus}
+            onClick={() => setIsAddModalOpen(true)}
+          >
+            Add Income Entry
+          </Button>
+        </div>
       </div>
 
       {/* AI Insight */}
@@ -195,12 +209,11 @@ export const IncomePage = () => {
             <p className="text-xs text-slate-400 mt-0.5">Individual revenue transactions</p>
           </div>
           <div className="w-full sm:w-64">
-            <input
-              type="text"
+            <Input
+              icon={Search}
               placeholder="Filter income records..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full glass-input rounded-xl px-3 py-1.5 text-xs placeholder:text-slate-500"
             />
           </div>
         </div>
@@ -232,7 +245,7 @@ export const IncomePage = () => {
                     <td className="py-3 px-4 text-slate-400 font-mono whitespace-nowrap">
                       {formatDate(item.date)}
                     </td>
-                    <td className="py-3 px-4 font-semibold text-slate-200 group-hover:text-white">
+                    <td className="py-3 px-4 font-semibold text-slate-200 group-hover:text-white max-w-xs min-w-0 truncate">
                       {item.description}
                     </td>
                     <td className="py-3 px-4 text-slate-300">
@@ -270,21 +283,25 @@ export const IncomePage = () => {
         )}
       </GlassCard>
 
-      {/* Add / Edit Modal */}
-      <AddTransactionModal
+      {/* Add / Edit Income Modal */}
+      <AddIncomeModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        initialType="Income"
       />
 
       {editingItem && (
-        <AddTransactionModal
+        <AddIncomeModal
           isOpen={!!editingItem}
           onClose={() => setEditingItem(null)}
-          initialType="Income"
           editItem={editingItem}
         />
       )}
+
+      {/* Import CSV Modal */}
+      <ImportCSVModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
+      />
 
       {/* Delete Confirmation */}
       <ConfirmModal
